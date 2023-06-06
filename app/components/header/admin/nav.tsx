@@ -1,7 +1,6 @@
 "use client"
 
 import Link from "next/link"
-import Image from "next/image"
 import { useState } from "react"
 import { HiOutlinePlus,HiEyeSlash,HiListBullet,HiXMark  } from "react-icons/hi2";
 
@@ -31,7 +30,7 @@ export default function Nav(){
                     {
                         menuItems.map((item) => (
                             <div key={item.name} className="flex flex-col items-center space-x-2">
-                                <p className="text-xl mb-2">{item.name}</p>
+                                <Link href={`dashboard/${item.link}`} className="text-xl mb-2">{item.name}</Link>
                                 <div className={`flex ${ showMenu ? "flex-row space-x-2" : "flex-col space-y-2"}`}>
                                    {
                                         menuItemsDetails.map(({ icon: Icon, text }) => (
