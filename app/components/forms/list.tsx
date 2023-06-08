@@ -5,11 +5,24 @@ import { Product } from '@prisma/client';
 import Link from 'next/link';
 
 export default function ListOptions(props : any){
-    function remove(item: any){
-        console.log("removed product", item.name);
+    async function remove(item: any){
+        const result = window.confirm("Are u sure u want to delete this?");
+
+        if(result){
+            await fetch("/api/ingredients/"+item.id,{
+                method: "DELETE",
+            });
+        }
     }
-    function recommend(product: Product){
-        console.log("recommended product", product.name);
+    async function recommend(item: any){
+        const result = window.confirm("Are u sure u want to  this?");
+
+        if(result){
+            await fetch("/api/products/"+item.id,{
+                method: "PATCH",
+                body: JSON.stringify(item.recommended ? false : true),
+            });
+        }
     }
 
     return (

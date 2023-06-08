@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { HiPlus } from "react-icons/hi2";
 import { Product } from '@prisma/client';
 import { getProducts } from '@/prisma/products';
-import ListOptions from '@/app/components/products/list';
+import ListOptions from '@/app/components/forms/list';
 
 
 export default async function Products() {

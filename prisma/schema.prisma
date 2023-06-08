@@ -24,6 +24,7 @@ model Product {
   number      Int
   name        String
   ingredients String[]
+  type        String
   description String
   price       Float
   recommended Boolean

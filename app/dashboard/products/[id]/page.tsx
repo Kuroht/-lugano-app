@@ -1,12 +1,12 @@
 import { Product, Ingredients } from '@prisma/client';
-import ProductForm from '@/app/components/products/productForm';
+import ProductForm from '@/app/components/forms/productForm';
 import { getIngredients } from '@/prisma/ingredients';
-import { getProductByNumber } from '@/prisma/products';
+import { getProductById } from '@/prisma/products';
 
 export default async function page(props: any) {
     try {
         const ingredients : Ingredients[] = await getIngredients();
-        const product : Product = await getProductByNumber(props.params.id)
+        const product : Product = await getProductById(props.params.id)
 
         console.log(product);
 

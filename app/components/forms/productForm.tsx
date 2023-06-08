@@ -11,12 +11,15 @@ export default function ProductForm(props : any) {
     const [price, setPrice] = useState(0);
     const [ingredients, setIngredients] = useState<Ingredients[]>([]);
     const [descr, setDescr] = useState("");
+    const [type, setType] = useState("");
     const [recommended, setRecommended] = useState(false);
 
     const [formError, setformError] = useState(false);
     const [selectError, setSelectError] = useState(false);
     
     const [productForm, setProductForm] = useState({});
+
+    const typeArr = ["Pizza", "Carnes", "Massas", "Saladas", "Extras"];
 
     useEffect( () => {
         if(props.product){
@@ -72,13 +75,36 @@ export default function ProductForm(props : any) {
       }
 
       function handleReset() {
+        if(props.product){
+            const productValueForm = props.product;
 
+            setNumber(productValueForm.number);
+            setName(productValueForm.name);
+            setPrice(productValueForm.price);
+            setDescr(productValueForm.description);
+            setType(productValueForm.type);
+            setIngredients(productValueForm.ingredients);
+            setRecommended(productValueForm.recommended);
+
+            handleValidation();
+        } else {
+            setNumber(0);
+            setName("");
+            setPrice(0);
+            setDescr("");
+            setType("0");
+            setIngredients([]);
+            setRecommended(false);
+        }
       }
 
       function handleValidation() {
-        if(number === 0 || name === "" || price === 0 || descr === "" || ingredients.length === 0){
-            setformError(true);
-        } else if(number === 0){
+        if(number === 0 || name === "" || price === 0 || descr === "" || type==="0"){
+            if(type === "Pizza" || ingredients.length === 0){
+                setformError(false);
+            } else if(type !== "Pizza" || ingredients.length === 0){
+                setformError(false);
+            }
         } else {
             setformError(false);
         }
@@ -88,6 +114,7 @@ export default function ProductForm(props : any) {
             name: name,
             price: price,
             descr: descr,
+            type: type,
             recommended: recommended,
             ingredients: [...ingredients],
         })
@@ -95,7 +122,7 @@ export default function ProductForm(props : any) {
       }
 
   return (
-    <div className="bg-gray-800 bg-opacity-50 flex items-center justify-center">
+    <div className="bg-opacity-50 flex items-center justify-center">
         <div className="bg-gray-300 p-4 rounded-lg w-[95%] md:w-4/5 mx-auto">
             <form onChange={() => handleValidation()}>
                 <div className="mb-4">
@@ -140,6 +167,26 @@ export default function ProductForm(props : any) {
                         value={descr}
                         onChange={(e) => setDescr(e.target.value)}
                     ></textarea>
+                </div>
+                <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700">
+                        Type
+                    </label>
+                    <select
+                        className="text-black mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md border-gray-300"
+                        onChange={(e) => setType(e.target.value)}
+                        >
+                            <option value="0">
+                                Select One
+                            </option>
+                        {
+                            typeArr.map((type) => (
+                                <option key={type} value={type}>
+                                    {type}
+                                </option>
+                            ))
+                        }
+                    </select>
                 </div>
                 <div className="mb-4">
                     <label className="block text-sm font-medium text-gray-700">
