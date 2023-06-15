@@ -18,8 +18,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="h-screen w-full bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
-          <div className='w-full lg:w-4/5 mx-auto'>
+        <div className="h-full w-full bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+          <div className='w-full h-full lg:w-4/5 mx-auto'>
             <ExtraNav />
             <Nav />
             {children}

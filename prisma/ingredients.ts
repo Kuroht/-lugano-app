@@ -54,13 +54,19 @@ export async function addIngredient(ingredient : Ingredients) {
 }
 
 export async function deleteIngredient(ingredientId: string) {
-  const result = await prisma.ingredients.delete({
-      where: {
-        id: ingredientId,
-      },
-  });
-  console.log(result);
+  try {
+    console.log(ingredientId);
+    const result = await prisma.ingredients.delete({
+        where: {
+          id: ingredientId,
+        },
+    });
+    console.log(result);
   return result;
+  } catch (error) {
+    console.log(error);
+  }
+  
 }
 
 export async function addPhotoToIngredient(ingredientPhoto : string, ingredientId: string) {

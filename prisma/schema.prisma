@@ -11,22 +11,24 @@ datasource db {
 }
 
 model Ingredients {
-  id     String @id @default(auto()) @map("_id") @db.ObjectId
-  number Int
-  name   String
-  price  Float
-  type   String
-  photo  String
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  number    Int
+  name      String
+  price     Float
+  type      String
+  photo     String
 }
 
 model Product {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
   number      Int
   name        String
-  ingredients String[]
   type        String
   description String
   price       Float
   recommended Boolean
-  photo  String
+  photo       String
+  ingredients Json[]
 }
+
+

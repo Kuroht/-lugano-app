@@ -17,7 +17,7 @@ export default function Nav(){
     }
 
     return (
-        <div className="w-full">
+        <div className="hidden md:w-full md:flex">
             <div className="border-b-2 border-black flex justify-between">
                 <div className="border-b-2 border-black flex">
                     <div className="flex mr-4"><HiHome className="text-white h-7 w-7 mr-2" /> <p className="text-white text-xs">EDF Mestre de Avis, Av. Nuno Álvares loja 6, 5400-419 Chaves</p> </div>

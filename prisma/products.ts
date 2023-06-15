@@ -7,7 +7,13 @@ export async function getProducts() {
           number: "asc"
       }
   });
-  return products;
+
+  const productsParse = products.map((product) => ({
+    ...product,
+    ingredients: product.ingredients && product.ingredients.length > 0 ? JSON.parse(product.ingredients) : [],
+  }));
+
+  return productsParse;
 }
 
 export async function getProductById(idString : string) {
@@ -19,8 +25,18 @@ export async function getProductById(idString : string) {
       id: idString,
     }
   });
-  console.log(product);
-  return product;
+
+  if(product.ingredients && product.ingredients.length > 0){
+    const productsParse = {
+      ...product,
+      ingredients:  JSON.parse(product.ingredients),
+    };
+  
+    return productsParse;
+  } else {
+    return product;
+  }
+  
 }
 
 export async function getProductsLastNumber() {
@@ -38,22 +54,26 @@ export async function getProductsLastNumber() {
 }
 
 export async function addProduct(product : Product) {
-  const result = await prisma.product.create({
-    data : {
-      number: product.number,
-      name: product.name,
-      ingredients: product.ingredients,
-      type: product.type,
-      description: product.description,
-      price: product.price,
-      recommended: product.recommended,
-      photo: ""
-    }
-  });
+  try {
+    const result = await prisma.product.create({
+      data : {
+        number: product.number,
+        name: product.name,
+        ingredients: JSON.stringify(product.ingredients),
+        type: product.type,
+        description: product.description,
+        price: product.price,
+        recommended: product.recommended,
+        photo: ""
+      }
+    });
+  
+    return result;
+  } catch (error) {
+    console.log("error", error);
+  }
 
-  console.log(result);
-
-  return result;
+  
 }
 
 export async function deleteProduct(productId: string) {
@@ -82,25 +102,29 @@ export async function addPhotoToProduct(productPhoto : string, productId: string
 }
 
 export async function editProduct(product : Product, productId: string) {
-  const result = await prisma.product.update({
-    where: {
-      id: productId,
-    },
-    data : {
-      number: product.number,
-      name: product.name,
-      ingredients: product.ingredients,
-      type: product.type,
-      description: product.description,
-      price: product.price,
-      recommended: product.recommended,
-      photo: product.photo,
-    }
-  });
-
-  console.log(result);
-
-  return result;
+  try {
+    const result = await prisma.product.update({
+      where: {
+        id: productId,
+      },
+      data : {
+        number: product.number,
+        name: product.name,
+        ingredients: JSON.stringify(product.ingredients),
+        type: product.type,
+        description: product.description,
+        price: product.price,
+        recommended: product.recommended,
+        photo: product.photo,
+      }
+    });
+  
+    console.log(result);
+  
+    return result;
+  } catch (error) {
+    console.log("error", error);
+  }
 }
 
 export async function findIfNumberExists(numberProp) {

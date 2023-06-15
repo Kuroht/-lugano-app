@@ -1,5 +1,4 @@
-import { deleteIngredient, editIngredient } from "@/prisma/ingredients";
-
+import { deleteProduct,editProduct } from "@/prisma/products";
 
 export async function PATCH(request: Request, {params}) {
     const body = await request.body
@@ -12,7 +11,7 @@ export async function PATCH(request: Request, {params}) {
 export async function PUT(request: Request, {params}) {
     try {
         const body = await request.json()
-        const result = await editIngredient(body, params.id)
+        const result = await editProduct(body, params.id)
         
         return new Response(JSON.stringify(result));
     } catch (error) {
@@ -21,9 +20,8 @@ export async function PUT(request: Request, {params}) {
 }
 
 export async function DELETE(request: Request, {params}) {
-    console.log(params);
     try {
-        const result = await deleteIngredient(params.id);
+        const result = await deleteProduct(params.id);
 
         return new Response(JSON.stringify(result));
     } catch (error) {

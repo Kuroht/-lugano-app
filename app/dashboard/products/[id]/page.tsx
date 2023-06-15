@@ -8,8 +8,6 @@ export default async function page(props: any) {
         const ingredients : Ingredients[] = await getIngredients();
         const product : Product = await getProductById(props.params.id)
 
-        console.log(product);
-
         return (
             <ProductForm ingredientsProps={ingredients} product={product}/>
         );

@@ -1,56 +1,151 @@
 "use client"
 
 import { useState, useEffect } from "react";
+import { useRouter } from 'next/navigation'
 
 export default function IngredientForm(props : any) {
-    const [number, setNumber] = useState(0);
-    const [name, setName] = useState("");
-    const [price, setPrice] = useState(0);
-    const [type, setType] = useState("");
+    const router = useRouter();
 
-    const [formError, setformError] = useState(false);
+    const [formError, setFormError] = useState(false);
+    const [formErrorString, setFormErrorString] = useState("");
     
-    const [ingredientForm, setIngredientForm] = useState({});
+    const [ingredientForm, setIngredientForm] = useState({
+        name: "",
+        number: 1,
+        price: 1,
+        type: "0"
+    });
 
     const typeArr = ["Carnes", "Queijos", "Molhos", "Peixes", "Fruta/Legumes", "Massa"]
+
+    function containsSpecialCharacters(input: string): boolean {
+        const specialCharacterPattern: RegExp = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+        return specialCharacterPattern.test(input);
+    }
 
     useEffect( () => {
         if(props.ingredient){
             const ingredientValueForm = props.ingredient;
 
-            setNumber(ingredientValueForm.number);
-            setName(ingredientValueForm.name);
-            setPrice(ingredientValueForm.price);
-            setType(ingredientValueForm.type);
-
+            setIngredientForm({
+                number: ingredientValueForm.number,
+                name: ingredientValueForm.name,
+                price: ingredientValueForm.price,
+                type: ingredientValueForm.type
+            })
+            setFormError(true);
+            setFormErrorString("The form is the same as before");
         } else {
             fetch("/api/ingredients",{
                 method: "GET",
             }).then((res) => res.json())
             .then((data) => {
-                setNumber(data + 1);
+                setIngredientForm({
+                    ...ingredientForm,
+                    number: data + 1,
+                })
             });
-
+            setFormError(true);
+            setFormErrorString("The form is not completed yet");
         }
       }, []);
 
-      async function handleSubmit() {
-       handleValidation()
-        if(!formError) {
-            if(props.ingredient){
-                const ingredientId = props.ingredient.id;
-                await fetch("/api/ingredients/"+ingredientId,{
-                    method: "PUT",
-                    body: JSON.stringify(ingredientForm),
-                });
-            } else {
-                await fetch("/api/ingredients",{
-                    method: "POST",
-                    body: JSON.stringify(ingredientForm),
-                });
+    function handleValidation(input : string, value : any){
+        setFormError(false);
+        setFormErrorString("");
+        
+        const specialCharVal = containsSpecialCharacters(value);
+
+        if(specialCharVal){
+            setFormError(true);
+            setFormErrorString("It cant have special Characters");
+        }
+
+        if(props.ingredient){
+            const ingredientValueForm = props.ingredient;
+
+            if(input === "number"){
+                if( ingredientValueForm.number === value ){
+                    setFormError(true);
+                    setFormErrorString("The number is the same as before");
+                }
+            } else if(input === "name"){
+                if( ingredientValueForm.name === value || value === "" ){
+                    setFormError(true);
+                    setFormErrorString("The name is the same as before or is empty");
+                }
+            } else if(input === "price"){
+                if( ingredientValueForm.price === value ){
+                    setFormError(true);
+                    setFormErrorString("The price is the same as before");
+                }
+            } else if(input === "type"){
+                if( ingredientValueForm.type === value || value === "" ){
+                    setFormError(true);
+                    setFormErrorString("The type is the same as before or empty");
+                } else {
+                    if(!typeArr.map((type) => type === value)){
+                        setFormError(true);
+                        setFormErrorString("The type does not exists");
+                    }
+                }
             }
         } else {
-            console.log("There must be and error")
+            if(input === "number"){
+                if( value === 0 ){
+                    setFormError(true);
+                    setFormErrorString("The number cant be 0");
+                }
+            } else if(input === "name"){
+                if( value === "" ){
+                    setFormError(true);
+                    setFormErrorString("The name cant be empty");
+                }
+            } else if(input === "price"){
+                if( value === 0 ){
+                    setFormError(true);
+                    setFormErrorString("The price cant be 0");
+                }
+            } else if(input === "type"){
+                if( value === "" ){
+                    setFormError(true);
+                    setFormErrorString("The type cant be empty");
+                } else {
+                    if(!typeArr.map((type) => type === value)){
+                        setFormError(true);
+                        setFormErrorString("The type does not exists");
+                    }
+                }
+            }
+        }
+        
+      }
+
+      async function handleSubmit(e: any) {
+        e.preventDefault();
+
+        if(!formError) {
+            try {
+                if(props.ingredient){
+                    const ingredientId = props.ingredient.id;
+                    await fetch("/api/ingredients/"+ingredientId,{
+                        method: "PUT",
+                        body: JSON.stringify(ingredientForm),
+                    });
+                } else {
+                    await fetch("/api/ingredients",{
+                        method: "POST",
+                        body: JSON.stringify(ingredientForm),
+                    });
+                }
+                router.push('/dashboard/ingredients');
+                router.refresh();
+            } catch (error) {
+                console.log(error);
+                window.confirm("Error adding to the dataBase, do u need to go back?")
+            }
+        } else {
+            window.alert(formErrorString)
         }
       }
 
@@ -58,63 +153,46 @@ export default function IngredientForm(props : any) {
         if(props.ingredient){
             const ingredientValueForm = props.ingredient;
 
-            setNumber(ingredientValueForm.number);
-            setName(ingredientValueForm.name);
-            setPrice(ingredientValueForm.price);
-            setType(ingredientValueForm.type);
+            setIngredientForm({
+                number: ingredientValueForm.number,
+                name: ingredientValueForm.name,
+                price: ingredientValueForm.price,
+                type: ingredientValueForm.type
+            })
 
         } else {
-            setNumber(0);
-            setName("");
-            setPrice(0);
-            setType("0");
+            setIngredientForm({
+                number: 1,
+                name: "",
+                price: 1,
+                type: "0"
+            })
         }
+        setFormError(true);
+        setFormErrorString("The form has been reseted");
       }
-
-      function handleValidation() {
-        console.log(type);
-        if(number === 0 || name === "" || price === 0 || type === "0" ){
-            setformError(true);
-        } else {
-            if(props.ingredient){
-                const ingredientValueForm = props.ingredient;
-    
-                if(number === ingredientValueForm.number ||
-                    name === ingredientValueForm.name ||
-                    price === ingredientValueForm.price ||
-                    type === ingredientValueForm.type)
-                {
-                    setformError(true); 
-                } else {
-                    setformError(false); 
-                }
-            } else {
-                setformError(false);    
-            }
-        }
-
-        setIngredientForm({
-            number: number,
-            name: name,
-            price: price,
-            type: type,
-        })
-        console.log(ingredientForm);
-      }
-
+      
   return (
     <div className="bg-opacity-50 flex items-center justify-center">
         <div className="bg-gray-300 p-4 rounded-lg w-[95%] md:w-4/5 mx-auto">
-            <form onChange={() => handleValidation()}>
+            <form onSubmit={ (e) => handleSubmit(e)}>
                 <div className="mb-4">
                     <label className="block text-sm font-medium text-gray-700">
                         Number
                     </label>
                     <input
                         type="number"
+                        required
+                        min={1}
+                        pattern="^\d+$"
                         className="text-black mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                        value={number}
-                        onChange={(e) => setNumber(Number(e.target.value))}
+                        value={ingredientForm.number || 1}
+                        onChange={(e) => {
+                            handleValidation("number", e.target.value)
+                            setIngredientForm({
+                            ...ingredientForm,
+                            number: Number(e.target.value)
+                        })}}
                     />
                 </div>
                 <div className="mb-4">
@@ -123,9 +201,17 @@ export default function IngredientForm(props : any) {
                     </label>
                     <input
                         type="text"
+                        pattern="[a-z0-9]{2,48}"
+                        minLength={2}
+                        maxLength={48}
                         className="text-black mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
+                        value={ingredientForm.name || ""}
+                        onChange={(e) => {
+                            handleValidation("name", e.target.value)
+                            setIngredientForm({
+                            ...ingredientForm,
+                            name: e.target.value
+                        })}}
                     />
                 </div>
                 <div className="mb-4">
@@ -134,9 +220,17 @@ export default function IngredientForm(props : any) {
                     </label>
                     <input
                         type="number"
+                        required
+                        min={1}
+                        pattern="^[1-9]\d*(\.\d{2})?$"
                         className="text-black mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                        value={price}
-                        onChange={(e) => setPrice(Number(e.target.value))}
+                        value={ingredientForm.price || 1}
+                        onChange={(e) => {
+                            handleValidation("price", e.target.value)
+                            setIngredientForm({
+                            ...ingredientForm,
+                            price: Number(e.target.value)
+                        })}}
                     />
                 </div>
                 <div className="mb-4">
@@ -145,7 +239,13 @@ export default function IngredientForm(props : any) {
                     </label>
                     <select
                         className="text-black mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md border-gray-300"
-                        onChange={(e) => setType(e.target.value)}
+                        onChange={(e) => {
+                            handleValidation("type", e.target.value)
+                            setIngredientForm({
+                            ...ingredientForm,
+                            type: e.target.value
+                        })}}
+                        value={ingredientForm.type || "0"}
                         >
                             <option value="0">
                                 Select One
@@ -161,10 +261,9 @@ export default function IngredientForm(props : any) {
                 </div>
                 <div className="flex justify-end">
                 <button
-                    type="button"
-                    disabled={formError}
-                    className={`inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border rounded-md hover:bg-gray-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500 ${ formError ? "border-red-500" : "border-transparent" }`}
-                    onClick={(e) => handleSubmit()}
+                    type="submit"
+                    className="inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border rounded-md hover:bg-gray-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500 border-transparent"
+                    onClick={(e) => handleSubmit(e)}
                 >
                     Save
                 </button>
@@ -181,3 +280,5 @@ export default function IngredientForm(props : any) {
     </div>
   )
 }
+
+
