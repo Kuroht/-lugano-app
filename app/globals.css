@@ -25,6 +25,20 @@
   background-color: rgb(226, 232, 240)
 }
 
+@keyframes bounce-y {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+:hover.animate-bounce-y {
+  animation: bounce-y 0.5s ease-in-out 500;
+}
+
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;

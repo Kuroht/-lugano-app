@@ -1,42 +1,85 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 
 import hero from "../../../../public/pizza.png"
 
 type Ingredient = {
     name: string,
-    price: number
+    price: number,
+    qty: number,
 }
 
 const productIng = [
-  { price: 1,name: "Molho de tomate" },
-  { price: 2,name: "Mozzarella" },
-  { price: 1.5,name: "Fiambre" },
-  { price: 1,name: "Cogumelos" },
-  { price: 2,name: "Bacon" },
-  { price: 1.5,name: "Chouriço" },
-  { price: 2,name: "Pimentos" },
-  { price: 1,name: "Azeitonas" },
-  { price: 1,name: "Oregos" },
-
+  { price: 1, type: "Molhos",name: "Molho de tomate" },
+  { price: 2, type: "Queijos",name: "Mozzarella" },
+  { price: 1.5, type: "Carnes",name: "Fiambre" },
+  { price: 1, type: "Fruta/Legumes",name: "Cogumelos" },
+  { price: 2, type: "Carnes",name: "Bacon" },
+  { price: 1.5, type: "Carnes",name: "Chouriço" },
+  { price: 2, type: "Fruta/Legumes",name: "Pimentos" },
+  { price: 1, type: "Fruta/Legumes",name: "Azeitonas" },
+  { price: 1, type: "Fruta/Legumes",name: "Oregos" },
 ];
+
+const typeArr = ["Carnes", "Queijos", "Molhos", "Peixes", "Fruta/Legumes", "Massa"]
+
+type Filters = {
+  byName: string;
+  byIngrType: string;
+};
 
 export default function ProductOverview({ product, ingredients }){
   const [selectedIngredients, setSelectedIngredients] = useState<Ingredient[]>([]);
-  const [totalPrice, setTotalPrice] = useState(0);
+  const [buttonIngredients, setButtonIngredients] = useState<Ingredient[]>([]);
+  const [totalPrice, setTotalPrice] = useState(product.price);
+  
+  const [filters, setFilters] = useState<Filters>({
+    byName: '',
+    byIngrType: '',
+  });
   
   const handleAddIngredient = (name, price) => {
+    selectedIngredients.find((ingredient) => ingredient.name === name ? )
     setSelectedIngredients([...selectedIngredients, {
         name,
         price,
+        qty: 1,
     }]);
     setTotalPrice(totalPrice + price);
   };
 
+  useEffect(() => {
+    handleFilterContentArr();
+  }, [filters, productIng]);
+
+  function handleFilterContentArr() {
+    const filteredArr = productIng?.filter((ingredient) => {
+      // Filter by name
+      if (
+        filters.byName !== '' &&
+        !ingredient.name.toLowerCase().includes(filters.byName.toLowerCase())
+      ) {
+        return false;
+      }
+
+      // Filter by ingredient type
+      if (
+        filters.byIngrType !== '0' &&
+        !ingredient.type.toLowerCase().includes(filters.byIngrType.toLowerCase())
+      ) {
+        return false;
+      }
+
+      return true;
+    });
+
+    setButtonIngredients(filteredArr);
+  }
+
   return (
-    <div className="container mx-auto p-4 min-h-screen ">
-      <div className="flex flex-col md:flex-row p-4 rounded-lg shadow-md shadow-slate-600 h-screen sm:h-fit">
+    <div className="container mx-auto p-4 h-full">
+      <div className="flex flex-col md:flex-row p-4 rounded-lg shadow-md shadow-slate-600 h-full">
         <div className="md:w-3/5 p-2">
           <div className="flex justify-between mb-4">
             <h2 className="text-2xl font-bold">{product.number}</h2>
@@ -48,7 +91,7 @@ export default function ProductOverview({ product, ingredients }){
           The Basic Tee 6-Pack allows you to fully express your vibrant personality with three grayscale options. Feeling adventurous? Put on a heather gray tee. Want to be a trendsetter? Try our exclusive colorway: "Black". Need to add an extra pop of color to your outfit? Our white tee has you covered.
           </p>
         </div>
-        <div className="md:w-2/5 border-l border-slate-700 p-4">
+        <div className="md:w-2/5 border-t md:border-l md:border-t-0 border-slate-700 p-4">
           <h3 className="text-xl font-bold my-2">Ingredients</h3>
           <ul className='grid grid-cols-2'>
             {
@@ -62,13 +105,52 @@ export default function ProductOverview({ product, ingredients }){
             */
             }
           </ul>
-          <h3 className="text-xl font-bold my-2">Add Ingredients</h3>
+          <div className='flex justify-evenly'>
+            <h3 className="text-xl font-bold my-2">Add Ingredients</h3>
+            <div className="mr-1 flex items-center">
+              <input
+                type="text"
+                minLength={2}
+                maxLength={20}
+                placeholder="By name"
+                className="text-white bg-transparent block w-20 shadow-none sm:text-sm border-b-2 border-gray-300 focus:outline-none focus:border-gray-500"
+                value={filters.byName}
+                onChange={(e) =>
+                  setFilters({
+                    ...filters,
+                    byName: e.target.value,
+                  })
+                }
+              />
+            </div>
+            <div className="mr-1 flex items-center">
+              <select
+                className="text-white bg-transparent w-20 shadow-none sm:text-sm border-b-2 border-gray-300 focus:outline-none focus:border-blue-500 appearance-none"
+                value={filters.byIngrType}
+                onChange={(e) =>
+                  setFilters({
+                    ...filters,
+                    byIngrType: e.target.value,
+                  })
+                }
+              >
+                <option value="0" className="text-white bg-slate-800 sm:text-sm">
+                  Select One
+                </option>
+                {typeArr.map((ingredient) => (
+                  <option key={ingredient} value={ingredient} className="text-white bg-slate-800 sm:text-sm">
+                    {ingredient}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
           <div className="flex gap-2 overflow-x-auto scroll-smooth">
             {/* list of available ingredients */
 
-                productIng.map((ingredient, index) => (
+                buttonIngredients.map((ingredient, index) => (
                   <button
-                      key={index} className="bg-tranparent text-white px-2 py-1 rounded-md"
+                      key={index} className="bg-tranparent text-white px-2 py-1 rounded-md h-16 md:h-20"
                       onClick={() => {handleAddIngredient(ingredient.name, ingredient.price)}}
                   >
                       {ingredient.name}

@@ -66,29 +66,30 @@ export default function MenuTab({products, ingredients}) {
             className={`menu-btn ${currentPage === "pizza" && "active border-b-2 border-white pb-2"}`}
             onClick={() => productsByType("pizza")}
           >
-            <GiFullPizza className="h-14 w-14 sm:h-20 sm:w-20" />
+            <GiFullPizza className={`h-14 w-14 sm:h-20 sm:w-20 ${currentPage === "pizza" ? "animate-bounce-y" : ""}`} />
           </button>
           <button
             className={`menu-btn ${currentPage === "pasta" && "active border-b-2 border-white pb-2"}`}
             onClick={() => productsByType("pasta")}
           >
-            <GiBowlOfRice className="h-14 w-14 sm:h-20 sm:w-20" />
+            <GiBowlOfRice className={`h-14 w-14 sm:h-20 sm:w-20 ${currentPage === "pasta" ? "animate-bounce-y" : ""}`} />
           </button>
           <button
             className={`menu-btn ${currentPage === "ingredient" && "active border-b-2 border-white pb-2"}`}
             onClick={() => productsByType("ingredient")}
           >
-            <BiCheese className="h-14 w-14 sm:h-20 sm:w-20" />
+            <BiCheese className={`h-14 w-14 sm:h-20 sm:w-20 ${currentPage === "ingredient" ? "animate-bounce-y" : ""}`} />
           </button>
           <button
             className={`menu-btn ${currentPage === "other" && "active border-b-2 border-white pb-2"}`}
             onClick={() => productsByType("other")}
           >
-            <HiDotsHorizontal className="h-14 w-14 sm:h-20 sm:w-20" />
+            <HiDotsHorizontal className={`h-14 w-14 sm:h-20 sm:w-20 ${currentPage === "other" ? "animate-bounce-y" : ""}`} />
           </button>
         </div>
       </div>
-      {getMenuPage()}
+      {/* Render the content based on the selected page */}
+      { getMenuPage() }
     </div>
   );
 };

@@ -114,7 +114,7 @@ export default function Filters({ filteredContent }) {
         </div>
         <div className="mr-1">
           <select
-            className={`text-white bg-transparent w-full shadow-none sm:text-sm border-b-2 border-gray-300 focus:outline-none focus:border-blue-500  appearance-none ${!isIngredient ? "hidden" : ""}`}
+            className={`text-white bg-transparent w-28 shadow-none sm:text-sm border-b-2 border-gray-300 focus:outline-none focus:border-blue-500  appearance-none ${!isIngredient ? "hidden" : ""}`}
             value={filters.byIngrType}
             onChange={(e) =>
               setFilters({
