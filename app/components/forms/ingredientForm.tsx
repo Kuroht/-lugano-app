@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation'
+import axios from "axios";
 
 export default function IngredientForm(props : any) {
     const router = useRouter();
@@ -36,7 +37,18 @@ export default function IngredientForm(props : any) {
             setFormError(true);
             setFormErrorString("The form is the same as before");
         } else {
-            fetch("/api/ingredients",{
+            axios.get('/api/ingredients')
+            .then(response => {
+                const data = response.data;
+                setIngredientForm(prevForm => ({
+                ...prevForm,
+                number: data + 1,
+                }));
+            })
+            .catch(error => {
+                // Handle the error
+            });
+            /*fetch("/api/ingredients",{
                 method: "GET",
             }).then((res) => res.json())
             .then((data) => {
@@ -44,7 +56,7 @@ export default function IngredientForm(props : any) {
                     ...ingredientForm,
                     number: data + 1,
                 })
-            });
+            });*/
             setFormError(true);
             setFormErrorString("The form is not completed yet");
         }
@@ -121,22 +133,25 @@ export default function IngredientForm(props : any) {
         
       }
 
-      async function handleSubmit(e: any) {
+      function handleSubmit(e: any) {
         e.preventDefault();
 
         if(!formError) {
             try {
                 if(props.ingredient){
                     const ingredientId = props.ingredient.id;
-                    await fetch("/api/ingredients/"+ingredientId,{
+                    axios.put(`/api/ingredients/${ingredientId}`, ingredientForm)
+
+                    /*await fetch("/api/ingredients/"+ingredientId,{
                         method: "PUT",
                         body: JSON.stringify(ingredientForm),
-                    });
+                    });*/
                 } else {
-                    await fetch("/api/ingredients",{
+                    axios.post('/api/ingredients', ingredientForm)
+                    /*await fetch("/api/ingredients",{
                         method: "POST",
                         body: JSON.stringify(ingredientForm),
-                    });
+                    });*/
                 }
                 router.push('/dashboard/ingredients');
                 router.refresh();

@@ -39,19 +39,52 @@ export default function ProductOverview({ product, ingredients }){
     byIngrType: '',
   });
   
-  const handleAddIngredient = (name, price) => {
-    selectedIngredients.find((ingredient) => ingredient.name === name ? )
-    setSelectedIngredients([...selectedIngredients, {
-        name,
-        price,
-        qty: 1,
-    }]);
+  const handleAddIngredient = (name: string, price: number) => {
+    const ingredientIndex = selectedIngredients.findIndex((ingredient) => ingredient.name === name);
+
+    if (ingredientIndex !== -1) {
+      // If ingredient is found, update the quantity
+      const updatedIngredients = [...selectedIngredients];
+      updatedIngredients[ingredientIndex] = {
+        ...updatedIngredients[ingredientIndex],
+        qty: updatedIngredients[ingredientIndex].qty + 1,
+      };
+      setSelectedIngredients(updatedIngredients);
+    } else {
+      // If ingredient is not found, add a new ingredient object to the array
+      setSelectedIngredients([
+        ...selectedIngredients, {
+          name,
+          price,
+          qty: 1,
+        },
+      ]); 
+    }
+    
     setTotalPrice(totalPrice + price);
   };
 
   useEffect(() => {
     handleFilterContentArr();
   }, [filters, productIng]);
+
+  function handleDelete(name: string, price: number){
+    const updatedIngredients = selectedIngredients.map((ingredient) => {
+      if (ingredient.name === name) {
+        if (ingredient.qty > 1) {
+          return { ...ingredient, qty: ingredient.qty - 1 };
+        } else {
+          return null; // Removing the ingredient by returning null
+        }
+      }
+      return ingredient;
+    });
+  
+    const filteredIngredients = updatedIngredients.filter((ingredient) => ingredient !== null);
+  
+    setSelectedIngredients(filteredIngredients);
+    setTotalPrice(totalPrice - price);
+  }
 
   function handleFilterContentArr() {
     const filteredArr = productIng?.filter((ingredient) => {
@@ -106,7 +139,7 @@ export default function ProductOverview({ product, ingredients }){
             }
           </ul>
           <div className='flex justify-evenly'>
-            <h3 className="text-xl font-bold my-2">Add Ingredients</h3>
+            <h3 className="text-xl font-bold mt-8 mb-4">Add Ingredients</h3>
             <div className="mr-1 flex items-center">
               <input
                 type="text"
@@ -168,13 +201,22 @@ export default function ProductOverview({ product, ingredients }){
               */
             }
           </div>
-          <div className="flex justify-between my-2">
+          <div className="flex justify-between mt-8 mb-4">
             <h3 className="text-xl font-bold">Selected Ingredients</h3>
-            <h3 className="text-2xl font-bold">{totalPrice}<span className="text-2xl font-bold ml-2">€</span></h3>
+            <h3 className={`text-2xl font-bold ${product.price === totalPrice ? "hidden" : ""}`}>{totalPrice}<span className="text-2xl font-bold ml-2">€</span></h3>
           </div>
           <ul className='grid grid-cols-2'>
             {selectedIngredients.map((ingredient,index) => (
-              <li key={index} className='text-md text-white'>{ingredient.name}</li>
+              <li key={index} className='text-md text-white'>
+                <span className={`text-md text-white ${ ingredient.qty === 1 ? "hidden" : "" }`}> {ingredient.qty} x </span>
+                {ingredient.name}
+                <button
+                  type='button'
+                  className="bg-tranparent text-red-500 rounded-md ml-2"
+                  onClick={() => handleDelete(ingredient.name, ingredient.price)}>
+                    x
+                </button>
+              </li>
             ))}
           </ul>
         </div>

@@ -2,18 +2,20 @@
 
 import { HiStar, HiTrash, HiPencil } from "react-icons/hi2";
 import Link from 'next/link';
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation';
+import axios from "axios";
 
 export default function ListOptions(props : any){
     const router = useRouter();
-    async function remove(type: string,item: any){
+    function remove(type: string,item: any){
         const result = window.confirm("Are u sure u want to delete this?");
 
         if(result){
             try {
-                await fetch("/api/"+type+"/"+item.id,{
+                axios.delete(`/api/${type}/${item.id}`)
+                /*await fetch("/api/"+type+"/"+item.id,{
                     method: "DELETE",
-                });
+                });*/
                 
                 router.refresh();
             } catch (error) {
@@ -21,14 +23,16 @@ export default function ListOptions(props : any){
             }
         }
     }
-    async function recommend(item: any){
+    function recommend(item: any){
         const result = window.confirm("Are u sure u want to  this?");
 
         if(result){
-            await fetch("/api/products/"+item.id,{
+            axios.patch(`/api/products/${item.id}`, { recommended: !item.recommended });
+
+            /*await fetch("/api/products/"+item.id,{
                 method: "PATCH",
                 body: JSON.stringify(item.recommended ? false : true),
-            });
+            });*/
         }
     }
 

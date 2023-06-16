@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { Product, Ingredients } from '@prisma/client';
 import { HiTrash } from "react-icons/hi2";
 import { useRouter } from 'next/navigation'
+import axios from "axios";
 
 export default function ProductForm(props : any) {
     const router = useRouter();
@@ -47,7 +48,18 @@ export default function ProductForm(props : any) {
             setFormError(true);
             setFormErrorString("The form is the same as before");
         } else {
-            fetch("/api/products",{
+            axios.get('/api/products')
+            .then(response => {
+                const data = response.data;
+                setProductForm(prevForm => ({
+                ...prevForm,
+                number: data + 1,
+                }));
+            })
+            .catch(error => {
+                // Handle the error
+            });
+            /*fetch("/api/products",{
                 method: "GET",
             }).then((res) => res.json())
             .then((data) => {
@@ -55,7 +67,7 @@ export default function ProductForm(props : any) {
                     ...productForm,
                     number: data + 1,
                 })
-            });
+            });*/
             setFormError(true);
             setFormErrorString("The form is not completed yet");
         }
@@ -89,22 +101,24 @@ export default function ProductForm(props : any) {
         })
       }
 
-      async function handleSubmit(e: any) {
+      function handleSubmit(e: any) {
         e.preventDefault();
 
         if(!formError) {
             try {
                 if(props.product){
                     const productId = props.product.id;
-                    await fetch("/api/products/"+productId,{
+                    axios.put(`/api/products/${productId}`, productForm)
+                    /*await fetch("/api/products/"+productId,{
                         method: "PUT",
                         body: JSON.stringify(productForm),
-                    });
+                    });*/
                 } else {
-                    await fetch("/api/products",{
+                    axios.post('/api/products', productForm)
+                    /*await fetch("/api/products",{
                         method: "POST",
                         body: JSON.stringify(productForm),
-                    });
+                    });*/
                 }
                 router.push('/dashboard/products');
                 router.refresh();
