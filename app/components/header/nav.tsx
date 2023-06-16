@@ -6,7 +6,7 @@ import { useState } from "react"
 import { HiHome,HiOutlineBars3,HiXMark  } from "react-icons/hi2";
 
 export default function Nav(){
-    const [ showMenu, setShowMenu ] = useState<boolean>(true);
+    const [ showMenu, setShowMenu ] = useState<boolean>(false);
 
     function handleMenu() {
         const menuToggle = !showMenu;

@@ -9,7 +9,7 @@ export default function DashboardLayout({
   return (
     <>
         <AdminNav />
-        <main className="w-full">
+        <main className="w-full h-screen">
           {children}
         </main>
     </>
