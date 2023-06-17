@@ -1,69 +1,74 @@
 "use client"
 import { useState } from 'react';
+import axios from 'axios';
+import Image from 'next/image';
 
-export default function ImageUploader() {
+export default function UploadForm() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>('');
 
-  const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  async function handleImageChange(event) {
     const file = event.target.files?.[0];
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    const maxSizeInBytes = 1024 * 1024;
 
-    if (file) {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('upload_preset', 'your_cloudinary_upload_preset');
+    if (file && allowedTypes.includes(file.type)) {
+      if (file.size <= maxSizeInBytes) {
+        try {
+          const formData = new FormData();
+          formData.append('file', file);
+          formData.append(
+            'upload_preset',
+            process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
+          );
+          formData.append('folder', "Lugano");
 
-      try {
-        const response = await fetch('https://api.cloudinary.com/v1_1/your_cloudinary_cloud_name/image/upload', {
-          method: 'POST',
-          body: formData,
-        });
+          const response = await axios.post(
+            process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_URL,
+            formData
+          );
 
-        if (response.ok) {
-          const data = await response.json();
-          setSelectedImage(data.secure_url);
-          setErrorMessage('');
-        } else {
-          throw new Error('Failed to upload image.');
+          if (response.status === 200) {
+            const data = response.data;
+            setSelectedImage(data.secure_url);
+            console.log(data);
+            setErrorMessage('');
+          }
+        } catch (error) {
+          console.log('Error uploading image:', error);
+          setSelectedImage(null);
+          setErrorMessage('Failed to upload image. Please try again later.');
         }
-      } catch (error) {
-        console.error('Error uploading image:', error);
+      } else {
         setSelectedImage(null);
-        setErrorMessage('Failed to upload image. Please try again later.');
+        setErrorMessage('Please select an image file smaller than 1MB.');
       }
     } else {
       setSelectedImage(null);
-      setErrorMessage('Please select an image file.');
+      setErrorMessage('Please select a valid image file (JPEG or PNG).');
     }
-  };
+  }
 
   return (
     <div>
       <label htmlFor="image" className="block mb-2 font-medium text-gray-700">
-        Upload Image
+        <span className="px-4 py-2 text-white bg-transparent rounded-md cursor-pointer">
+          Upload Image
+        </span>
       </label>
       <input
         type="file"
         id="image"
-        accept=".jpg, .jpeg, .png"
+        accept=".jpg, .jpeg, .png, .webp"
         onChange={handleImageChange}
-        className="mb-2"
+        className="hidden"
       />
-      {errorMessage && (
-        <p className="text-red-500">{errorMessage}</p>
-      )}
+      {errorMessage && <p className="text-red-500">{errorMessage}</p>}
       {selectedImage && (
-        <img src={selectedImage} alt="Selected" className="mt-2 w-32 h-32" />
-      )}
-      {selectedImage && (
-        <button
-          onClick={() => ()}
-          className="mt-2 px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
-        >
-          Open Image
-        </button>
+        <div className="mt-2">
+          <Image src={selectedImage} alt="Selected" width={200} height={200}  className="w-auto h-auto" />
+        </div>
       )}
     </div>
   );
-};
-
+}

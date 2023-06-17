@@ -153,8 +153,7 @@ export default function IngredientForm(props : any) {
                         body: JSON.stringify(ingredientForm),
                     });*/
                 }
-                router.push('/dashboard/ingredients');
-                router.refresh();
+                router.replace('/dashboard/ingredients');
             } catch (error) {
                 console.log(error);
                 window.confirm("Error adding to the dataBase, do u need to go back?")
