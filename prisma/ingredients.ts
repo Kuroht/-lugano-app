@@ -44,7 +44,7 @@ export async function addIngredient(ingredient : Ingredients) {
       name: ingredient.name,
       type: ingredient.type,
       price: ingredient.price,
-      photo: ""
+      photo: ingredient.photo,
     }
   });
 

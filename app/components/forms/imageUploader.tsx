@@ -1,5 +1,80 @@
 "use client"
 import { useState } from 'react';
+import Image from 'next/image';
+
+export default function UploadForm({setFileImg, photoProps}) {
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string>('');
+
+  function handleImageChange(event) {
+    const file = event.target.files?.[0];
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    const maxSizeInBytes = 1024 * 1024;
+
+    if (file && allowedTypes.includes(file.type)) {
+      if (file.size <= maxSizeInBytes) {
+        try {
+          const formData = new FormData();
+          formData.append('file', file);
+          formData.append(
+            'upload_preset',
+            process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
+          );
+          formData.append('folder', "Lugano");
+
+          setFileImg(formData);
+            
+          setSelectedImage(URL.createObjectURL(file));
+          setErrorMessage('');
+
+        } catch (error) {
+          console.log('Error uploading image:', error);
+          setSelectedImage(null);
+          setErrorMessage('Failed to upload image. Please try again later.');
+        }
+      } else {
+        setSelectedImage(null);
+        setErrorMessage('Please select an image file smaller than 1MB.');
+      }
+    } else {
+      setSelectedImage(null);
+      setErrorMessage('Please select a valid image file (JPEG or PNG).');
+    }
+  }
+
+  return (
+    <div>
+      <label htmlFor="image" className="block mb-2 font-medium text-gray-700">
+        <span className="px-4 py-2 text-white bg-transparent rounded-md cursor-pointer">
+          Upload Image
+        </span>
+      </label>
+      <input
+        type="file"
+        id="image"
+        accept=".jpg, .jpeg, .png, .webp"
+        onChange={handleImageChange}
+        className="hidden"
+      />
+      {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+      {selectedImage && (
+        <div className="mt-2">
+          <Image src={selectedImage} alt="Selected" width={200} height={200}  className="w-40 h-40" />
+        </div>
+      )}
+      {!selectedImage && photoProps !== "" && (
+          <div className="mt-2">
+          <Image src={photoProps} alt="Selected" width={200} height={200}  className="w-40 h-40" />
+          </div>
+      )}
+    </div>
+  );
+}
+
+
+/*
+"use client"
+import { useState } from 'react';
 import axios from 'axios';
 import Image from 'next/image';
 
@@ -72,3 +147,6 @@ export default function UploadForm() {
     </div>
   );
 }
+
+
+*/

@@ -3,27 +3,25 @@
 import { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation'
 import axios from "axios";
+import UploadForm from "./imageUploader";
 
 export default function IngredientForm(props : any) {
     const router = useRouter();
 
-    const [formError, setFormError] = useState(false);
-    const [formErrorString, setFormErrorString] = useState("");
-    
+    // Form Values
     const [ingredientForm, setIngredientForm] = useState({
         name: "",
         number: 1,
         price: 1,
-        type: "0"
+        type: "0",
+        photo: ""
     });
-
-    const typeArr = ["Carnes", "Queijos", "Molhos", "Peixes", "Fruta/Legumes", "Massa"]
-
-    function containsSpecialCharacters(input: string): boolean {
-        const specialCharacterPattern: RegExp = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
-        return specialCharacterPattern.test(input);
-    }
-
+    const [formError, setFormError] = useState(false);
+    const [formErrorString, setFormErrorString] = useState("");
+    
+    //Image
+    const [fileImg, setFileImg] = useState<FormData>();
+    
     useEffect( () => {
         if(props.ingredient){
             const ingredientValueForm = props.ingredient;
@@ -32,7 +30,8 @@ export default function IngredientForm(props : any) {
                 number: ingredientValueForm.number,
                 name: ingredientValueForm.name,
                 price: ingredientValueForm.price,
-                type: ingredientValueForm.type
+                type: ingredientValueForm.type,
+                photo: ingredientValueForm.photo
             })
             setFormError(true);
             setFormErrorString("The form is the same as before");
@@ -62,6 +61,34 @@ export default function IngredientForm(props : any) {
         }
       }, []);
 
+    async function uploadImgToCloudinary(){
+        try {
+            const response = await axios.post(
+                process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_URL,
+                fileImg
+            );
+
+            if (response.status === 200) {
+                const data = response.data;
+                
+                return data.secure_url;
+            }
+        } catch (error) {
+            console.log('Error uploading image:', error);
+            setFormError(true);
+            setFormErrorString('Failed to upload image. Please try again later.');
+            return false;
+        }
+    }
+
+    const typeArr = ["meats", "cheeses", "sauces", "fish", "fruitsVegetables", "pasta"];
+
+    function containsSpecialCharacters(input: string): boolean {
+        const specialCharacterPattern: RegExp = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+        return specialCharacterPattern.test(input);
+    }
+
+
     function handleValidation(input : string, value : any){
         setFormError(false);
         setFormErrorString("");
@@ -72,7 +99,7 @@ export default function IngredientForm(props : any) {
             setFormError(true);
             setFormErrorString("It cant have special Characters");
         }
-
+        
         if(props.ingredient){
             const ingredientValueForm = props.ingredient;
 
@@ -118,6 +145,9 @@ export default function IngredientForm(props : any) {
                     setFormError(true);
                     setFormErrorString("The price cant be 0");
                 }
+            } else if(fileImg){
+                setFormError(true);
+                setFormErrorString("The photo is required");
             } else if(input === "type"){
                 if( value === "" ){
                     setFormError(true);
@@ -133,27 +163,37 @@ export default function IngredientForm(props : any) {
         
       }
 
-      function handleSubmit(e: any) {
+      async function handleSubmit(e: any) {
         e.preventDefault();
 
         if(!formError) {
             try {
-                if(props.ingredient){
-                    const ingredientId = props.ingredient.id;
-                    axios.put(`/api/ingredients/${ingredientId}`, ingredientForm)
-
-                    /*await fetch("/api/ingredients/"+ingredientId,{
-                        method: "PUT",
-                        body: JSON.stringify(ingredientForm),
-                    });*/
-                } else {
-                    axios.post('/api/ingredients', ingredientForm)
-                    /*await fetch("/api/ingredients",{
-                        method: "POST",
-                        body: JSON.stringify(ingredientForm),
-                    });*/
+                const imgDone = await uploadImgToCloudinary();
+                if(imgDone){
+                    if(props.ingredient){
+                        const ingredientId = props.ingredient.id;
+                        axios.put(`/api/ingredients/${ingredientId}`, {
+                            ...ingredientForm,
+                            photo: imgDone,
+                        })
+    
+                        /*await fetch("/api/ingredients/"+ingredientId,{
+                            method: "PUT",
+                            body: JSON.stringify(ingredientForm),
+                        });*/
+                    } else {
+                        axios.post('/api/ingredients', {
+                            ...ingredientForm,
+                            photo: imgDone,
+                        })
+                        /*await fetch("/api/ingredients",{
+                            method: "POST",
+                            body: JSON.stringify(ingredientForm),
+                        });*/
+                    }
+                    router.replace('/dashboard/ingredients');
+                    router.refresh();
                 }
-                router.replace('/dashboard/ingredients');
             } catch (error) {
                 console.log(error);
                 window.confirm("Error adding to the dataBase, do u need to go back?")
@@ -171,7 +211,8 @@ export default function IngredientForm(props : any) {
                 number: ingredientValueForm.number,
                 name: ingredientValueForm.name,
                 price: ingredientValueForm.price,
-                type: ingredientValueForm.type
+                type: ingredientValueForm.type,
+                photo: ingredientValueForm.photo
             })
 
         } else {
@@ -179,7 +220,8 @@ export default function IngredientForm(props : any) {
                 number: 1,
                 name: "",
                 price: 1,
-                type: "0"
+                type: "0",
+                photo: ""
             })
         }
         setFormError(true);
@@ -272,6 +314,9 @@ export default function IngredientForm(props : any) {
                             ))
                         }
                     </select>
+                </div>
+                <div className="mb-4">
+                    <UploadForm setFileImg={setFileImg} photoProps={ingredientForm.photo} />
                 </div>
                 <div className="flex justify-end">
                 <button

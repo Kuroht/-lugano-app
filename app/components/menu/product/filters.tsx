@@ -15,6 +15,19 @@ type Filters = {
   byIngrType: string;
 };
 
+const typeArr = ["meats", "cheeses", "sauces", "fish", "fruitsVegetables", "pasta"];
+interface DisplayNames {
+  [key: string]: string;
+}
+const displayNames: DisplayNames = {
+  meats: "Carnes",
+  cheeses: "Queijos",
+  sauces: "Molhos",
+  fish: "Peixes",
+  fruitsVegetables: "Fruta/Legumes",
+  pasta: "Massa",
+};
+
 export default function Filters({ filteredContent }) {
   const [contentsArr, setContentsArr] = useState(filteredContent);
   const [productShowCard, setProductShowCard] = useState(false);
@@ -126,9 +139,9 @@ export default function Filters({ filteredContent }) {
             <option value="0" className="text-white bg-slate-800 sm:text-sm">
               Select One
             </option>
-            {filteredContent.map((product) => (
-              <option key={product.number} value={product.type} className="text-white bg-slate-800 sm:text-sm">
-                {product.type}
+            {typeArr.map((product) => (
+              <option key={product} value={product} className="text-white bg-slate-800 sm:text-sm">
+                {displayNames[product]}
               </option>
             ))}
           </select>

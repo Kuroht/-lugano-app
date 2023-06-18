@@ -54,6 +54,7 @@ export async function getProductsLastNumber() {
 }
 
 export async function addProduct(product : Product) {
+  console.log();
   try {
     const result = await prisma.product.create({
       data : {
@@ -64,7 +65,7 @@ export async function addProduct(product : Product) {
         description: product.description,
         price: product.price,
         recommended: product.recommended,
-        photo: ""
+        photo: product.photo,
       }
     });
   

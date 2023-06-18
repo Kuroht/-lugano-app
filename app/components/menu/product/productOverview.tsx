@@ -22,7 +22,7 @@ const productIng = [
   { price: 1, type: "Fruta/Legumes",name: "Oregos" },
 ];
 
-const typeArr = ["Carnes", "Queijos", "Molhos", "Peixes", "Fruta/Legumes", "Massa"]
+const typeArr = ["meats", "cheeses", "sauces", "fish", "fruitsVegetables", "pasta"];
 
 type Filters = {
   byName: string;
@@ -66,7 +66,7 @@ export default function ProductOverview({ product, ingredients }){
 
   useEffect(() => {
     handleFilterContentArr();
-  }, [filters, productIng]);
+  }, [filters, ingredients]);
 
   function handleDelete(name: string, price: number){
     const updatedIngredients = selectedIngredients.map((ingredient) => {
@@ -87,7 +87,7 @@ export default function ProductOverview({ product, ingredients }){
   }
 
   function handleFilterContentArr() {
-    const filteredArr = productIng?.filter((ingredient) => {
+    const filteredArr = ingredients?.filter((ingredient) => {
       // Filter by name
       if (
         filters.byName !== '' &&
@@ -128,7 +128,7 @@ export default function ProductOverview({ product, ingredients }){
           <h3 className="text-xl font-bold my-2">Ingredients</h3>
           <ul className='grid grid-cols-2'>
             {
-              productIng.map((ingredient, index) => (
+              ingredients.map((ingredient, index) => (
                 <li key={index} className='text-sm text-gray-500'>{ingredient.name}</li>
               ))
             /*  
