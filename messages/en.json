@@ -1,0 +1,29 @@
+{
+    "Home": {
+        "title": "Welcome to P.Lugano",
+        "menu": "Menu",
+        "recommended": "Recommended Products",
+        "description": "Pizzaria Lugano is a delightful destination for pizza lovers in the charming city of Chaves, Portugal. Located near the heart of the city, the pizzeria offers a unique gastronomic experience, combining authentic flavors with a welcoming atmosphere."
+    },
+    "Nav": {
+        "home" : "Home",
+        "menu" : "Menu",
+        "about" : "About",
+        "contact" : "Contact"
+    },
+    "About": {
+        "fulldescription": "Pizzaria Lugano is a delightful destination for pizza lovers in the charming city of Chaves, Portugal. Located near the heart of the city, the pizzeria offers a unique gastronomic experience, combining authentic flavors with a welcoming atmosphere. With a team of chefs passionate about the art of pizza, Pizzaria Lugano is known for its delicious creations made with fresh and selected ingredients. From classic options like margherita and pepperoni to bolder combinations, there is a variety of flavors to please every palate. In addition to irresistible pizzas, the pizzeria also offers a selection of sides and appetizers, such as fresh salads, antipasti, and tasty breads. Customers can also enjoy an extensive list of carefully selected wines to complement their meal. With a cozy ambiance and friendly service, Pizzaria Lugano is the perfect place to enjoy a relaxed meal with friends and family. Whether it's for a romantic dinner, a special celebration, or simply to satisfy that pizza craving, the pizzeria offers a memorable gastronomic experience in Chaves, Portugal."
+    },
+    "MenuPage" : {
+        "title" : {
+            "pizza" : "Pizza",
+            "pasta" : "Pastas & Dishes",
+            "ingredient" : "Ingredients",
+            "other" : "Others"
+        },
+        "filters" : {
+            "sorterName" : "By Name",
+            "select" : "Select One"
+        }
+    }
+}
