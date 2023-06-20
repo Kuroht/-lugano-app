@@ -170,13 +170,11 @@ export default function IngredientForm(props : any) {
             try {
                 const imgDone = fileImg === null ? null : await uploadImgToCloudinary();
 
-                console.log(imgDone)
-
                 //if(imgDone !== null) return;
 
                 if(props.ingredient){
                     const ingredientId = props.ingredient.id;
-                    axios.put(`/en//api/ingredients/${ingredientId}`, {
+                    axios.put(`/en/api/ingredients/${ingredientId}`, {
                         ...ingredientForm,
                         photo: imgDone || props.ingredient.photo,
                     })
@@ -186,7 +184,7 @@ export default function IngredientForm(props : any) {
                         body: JSON.stringify(ingredientForm),
                     });*/
                 } else {
-                    axios.post('/en//api/ingredients', {
+                    axios.post('/en/api/ingredients', {
                         ...ingredientForm,
                         photo: imgDone,
                     })

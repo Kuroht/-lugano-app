@@ -9,7 +9,7 @@ import MenuPage from "./menuPage";
 import { Product } from "@prisma/client";
 
 
-export default function MenuTab({products, ingredients}) {
+export default function MenuTab({products, ingredients, message}) {
   const [currentPage, setCurrentPage] = useState<string>("pizza");
   const [productsArr, setProductsArr] = useState(products);
 
@@ -20,19 +20,17 @@ export default function MenuTab({products, ingredients}) {
   const getMenuPage = () => {
     switch (currentPage) {
       case "pizza":
-        return <MenuPage title="pizza" icon={<GiFullPizza className="text-6xl" />} contents={productsArr}/>;
+        return <MenuPage title={message.pizza} icon={<GiFullPizza className="text-6xl" />} contents={productsArr} message={message}/>;
       case "pasta":
-        return <MenuPage title="pasta" icon={<GiBowlOfRice className="text-6xl" />} contents={productsArr}/>;
+        return <MenuPage title={message.pasta} icon={<GiBowlOfRice className="text-6xl" />} contents={productsArr} message={message}/>;
       case "ingredient":
-        return <MenuPage title="ingredient" icon={<BiCheese className="text-6xl" />} contents={ingredients}/>;
+        return <MenuPage title={message.ingredient} icon={<BiCheese className="text-6xl" />} contents={ingredients} message={message}/>;
       case "other":
-        return <MenuPage title="other" icon={<HiDotsHorizontal className="text-6xl" />} contents={productsArr}/>;
+        return <MenuPage title={message.other} icon={<HiDotsHorizontal className="text-6xl" />} contents={productsArr} message={message}/>;
       default:
         return <div>Page not found</div>;
     }
   };
-
-  //const typeArr = ["Pizza", "Carnes", "Massas", "Saladas", "Extras"];
 
   function productsByType(type: string) {
     let filteredProducts: Product[] = [];

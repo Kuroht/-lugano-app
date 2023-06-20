@@ -35,6 +35,8 @@ export default function ProductCard( { product } ) {
             alt={product.name} 
             className="object-cover w-56 h-56 overflow-x-visible" 
             priority={false}
+            width={150}
+            height={150}
             quality={10}/>
         </div>
         <div className="mt-4 flex flex-row justify-between">

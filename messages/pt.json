@@ -21,5 +21,12 @@
             "ingredient" : "Ingredientes",
             "other" : "Outros"
         }
+    },
+    "ProductOverview" : {
+        "ingredients" : "Ingredientes",
+        "Addingredients" : "Adicione Ingredientes",
+        "Selectedingredients" : "Ingredientes Selecionados",
+        "byName" : "Por Nome",
+        "SelectOne" : "Selecione Um"
     }
 }

@@ -25,5 +25,12 @@
             "sorterName" : "By Name",
             "select" : "Select One"
         }
+    },
+    "ProductOverview" : {
+        "ingredients" : "Ingredients",
+        "Addingredients" : "Add Ingredients",
+        "Selectedingredients" : "Selected Ingredients",
+        "byName" : "By Name",
+        "SelectOne" : "Select One"
     }
 }

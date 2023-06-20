@@ -27,7 +27,7 @@ export default function ProductForm(props : any) {
     });
 
     //Image
-    const [fileImg, setFileImg] = useState<FormData>();
+    const [fileImg, setFileImg] = useState(null);
 
     const typeArr = ["Pizza", "Carnes", "Massas", "Saladas", "Extras"];
 
@@ -54,16 +54,19 @@ export default function ProductForm(props : any) {
             setFormError(true);
             setFormErrorString("The form is the same as before");
         } else {
-            axios.get('/api/products')
+            axios.get('/en/api/products')
             .then(response => {
                 const data = response.data;
                 setProductForm(prevForm => ({
                 ...prevForm,
-                number: data + 1,
+                number: data !== "error" ? data + 1 : 1,
                 }));
             })
             .catch(error => {
-                // Handle the error
+                setProductForm(prevForm => ({
+                ...prevForm,
+                number: 0,
+                }));
             });
             /*fetch("/api/products",{
                 method: "GET",
@@ -132,31 +135,32 @@ export default function ProductForm(props : any) {
 
         if(!formError) {
             try {
-                const imgDone = await uploadImgToCloudinary();
-                if(imgDone){
-                    if(props.product){
-                        const productId = props.product.id;
-                        axios.put(`/api/products/${productId}`, {
-                            ...productForm,
-                            photo: imgDone,
-                        })
-                        /*await fetch("/api/products/"+productId,{
-                            method: "PUT",
-                            body: JSON.stringify(productForm),
-                        });*/
-                    } else {
-                        axios.post('/api/products', {
-                            ...productForm,
-                            photo: imgDone,
-                        })
-                        /*await fetch("/api/products",{
-                            method: "POST",
-                            body: JSON.stringify(productForm),
-                        });*/
-                    }
-                    router.push('/dashboard/products');
-                    router.refresh();
+                console.log(fileImg)
+                const imgDone = fileImg === null ? null : await uploadImgToCloudinary();
+                
+                if(props.product){
+                    const productId = props.product.id;
+                    axios.put(`/en/api/products/${productId}`, {
+                        ...productForm,
+                        photo: imgDone || props.product.photo,
+                    })
+                    /*await fetch("/api/products/"+productId,{
+                        method: "PUT",
+                        body: JSON.stringify(productForm),
+                    });*/
+                } else {
+                    axios.post('/en/api/products', {
+                        ...productForm,
+                        photo: imgDone,
+                    })
+                    /*await fetch("/api/products",{
+                        method: "POST",
+                        body: JSON.stringify(productForm),
+                    });*/
                 }
+                router.push('/dashboard/products');
+                router.refresh();
+            
             } catch (error) {
                 console.log(error);
                 window.confirm("Error adding to the dataBase, do u need to go back?")
@@ -344,7 +348,7 @@ export default function ProductForm(props : any) {
                     </label>
                     <textarea
                         minLength={2}
-                        maxLength={100}
+                        maxLength={150}
                         className="text-black mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                         value={productForm.description || ""}
                         onChange={(e) => {
