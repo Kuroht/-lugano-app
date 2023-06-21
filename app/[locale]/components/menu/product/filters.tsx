@@ -41,14 +41,14 @@ export default function Filters({ filteredContent, message }) {
     byIngrType: '',
   });
 
-  const isIngredient = filteredContent.find((product) => product.ingredients ? false : true)
+  const isIngredient = filteredContent.find((product : Product) => product.ingredients ? false : true)
   console.log(message);
   useEffect(() => {
     handleFilterContentArr();
   }, [filters, filteredContent]);
 
   function handleFilterContentArr() {
-    const filteredArr = filteredContent?.filter((product) => {
+    const filteredArr = filteredContent?.filter((product : Product) => {
       // Filter by name
       if (
         filters.byName !== '' &&
