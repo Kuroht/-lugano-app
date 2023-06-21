@@ -28,7 +28,7 @@ const displayNames: DisplayNames = {
   pasta: "Massa",
 };
 
-export default function Filters({ filteredContent }) {
+export default function Filters({ filteredContent, message }) {
   const [contentsArr, setContentsArr] = useState(filteredContent);
   const [productShowCard, setProductShowCard] = useState(false);
   const [filters, setFilters] = useState<Filters>({
@@ -42,7 +42,7 @@ export default function Filters({ filteredContent }) {
   });
 
   const isIngredient = filteredContent.find((product) => product.ingredients ? false : true)
-  
+  console.log(message);
   useEffect(() => {
     handleFilterContentArr();
   }, [filters, filteredContent]);
@@ -114,7 +114,7 @@ export default function Filters({ filteredContent }) {
             type="text"
             minLength={2}
             maxLength={20}
-            placeholder="By name"
+            placeholder={message.filters.sorterName}
             className="text-white bg-transparent block w-full shadow-none sm:text-sm border-b-2 border-gray-300 focus:outline-none focus:border-gray-500"
             value={filters.byName}
             onChange={(e) =>
@@ -137,7 +137,7 @@ export default function Filters({ filteredContent }) {
             }
           >
             <option value="0" className="text-white bg-slate-800 sm:text-sm">
-              Select One
+              {message.filters.select}
             </option>
             {typeArr.map((product) => (
               <option key={product} value={product} className="text-white bg-slate-800 sm:text-sm">

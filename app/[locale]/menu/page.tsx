@@ -3,7 +3,7 @@ import MenuTab from '../components/menu/menuTab'
 import { getProducts } from '@/prisma/products';
 import { getIngredients } from '@/prisma/ingredients';
 import { Product, Ingredients } from '@prisma/client';
-import {useTranslations} from 'next-intl';
+import {useTranslations, useLocale} from 'next-intl';
 
 async function getPropsForMenuTab(message : any){
   const products : Product[] = await getProducts();
@@ -14,6 +14,7 @@ async function getPropsForMenuTab(message : any){
 
 export default function page() {
   const t = useTranslations('MenuPage');
+  const locale = useLocale();
 
   const message = {
     pizza : t("title.pizza"),
@@ -21,9 +22,10 @@ export default function page() {
     ingredient : t("title.ingredient"),
     other : t("title.other"),
     filters : {
-      sorterName : t("sorterName"),
-      select : t("select")
-    }
+      sorterName : t("filters.sorterName"),
+      select : t("filters.select")
+    },
+    locale : locale 
   }
 
   return (

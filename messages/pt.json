@@ -20,6 +20,10 @@
             "pasta" : "Massas & Cozinha",
             "ingredient" : "Ingredientes",
             "other" : "Outros"
+        },
+        "filters" : {
+            "sorterName" : "Por Nome",
+            "select" : "Selecione Um"
         }
     },
     "ProductOverview" : {

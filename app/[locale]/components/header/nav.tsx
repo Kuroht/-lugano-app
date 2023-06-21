@@ -11,6 +11,7 @@ export default function Nav({ messages,locale }){
     const pathname = usePathname();
 
     const dynamicPathname = locale === "en" ? pathname.substring(3) : pathname;
+    console.log(dynamicPathname)
 
     function handleMenu() {
         const menuToggle = !showMenu;
@@ -32,8 +33,8 @@ export default function Nav({ messages,locale }){
                         <li><Link href="/contact" className="text-gray-300 hover:text-white text-xl">{messages.Contact}</Link></li>
                         {
                             locale === "pt" ?
-                                <li className="rounded border px-1 border-white"><Link href={dynamicPathname} locale="en" className="text-gray-300 hover:text-white text-xl">En</Link></li> :
-                                <li className="rounded border px-1 border-white"><Link href={dynamicPathname} locale="pt" className="text-gray-300 hover:text-white text-xl">Pt</Link></li>
+                                <li className="rounded border px-1 border-white"><Link href={dynamicPathname || "/"} locale="en" className="text-gray-300 hover:text-white text-xl">En</Link></li> :
+                                <li className="rounded border px-1 border-white"><Link href={dynamicPathname || "/"} locale="pt" className="text-gray-300 hover:text-white text-xl">Pt</Link></li>
                         }
                     </ul>
                 </div>
