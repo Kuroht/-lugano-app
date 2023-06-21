@@ -23,14 +23,28 @@
         },
         "filters" : {
             "sorterName" : "Por Nome",
-            "select" : "Selecione Um"
+            "select" : "Selecione Um",
+            "meats": "Carne",
+            "cheeses": "Queijo",
+            "sauces": "Molho",
+            "fish": "Peixe",
+            "fruitsVegetables": "FrutasOuLegumes",
+            "pasta": "Pasta"
         }
     },
     "ProductOverview" : {
         "ingredients" : "Ingredientes",
         "Addingredients" : "Adicione Ingredientes",
         "Selectedingredients" : "Ingredientes Selecionados",
-        "byName" : "Por Nome",
-        "SelectOne" : "Selecione Um"
+        "filters" : {
+            "sorterName" : "Por Nome",
+            "select" : "Selecione Um",
+            "meats": "Carne",
+            "cheeses": "Queijo",
+            "sauces": "Molho",
+            "fish": "Peixe",
+            "fruitsVegetables": "FrutasOuLegumes",
+            "pasta": "Pasta"
+        }
     }
 }

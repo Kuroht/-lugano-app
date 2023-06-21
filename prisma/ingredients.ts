@@ -42,6 +42,7 @@ export async function addIngredient(ingredient : Ingredients) {
     data : {
       number: ingredient.number,
       name: ingredient.name,
+      nameEn: ingredient.nameEn,
       type: ingredient.type,
       price: ingredient.price,
       photo: ingredient.photo,
@@ -92,6 +93,7 @@ export async function editIngredient(ingredient : Ingredients, ingredientId: str
     data : {
       number: ingredient.number,
       name: ingredient.name,
+      nameEn: ingredient.nameEn,
       type: ingredient.type,
       price: ingredient.price,
       photo: ingredient.photo,

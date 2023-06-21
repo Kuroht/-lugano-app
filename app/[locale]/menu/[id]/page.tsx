@@ -12,7 +12,7 @@ async function getPropsForOverview(id : string, messages: any, locale: string ){
     const ingredients : Ingredients[] = await getIngredients();
     const product : Product = await getProductById(id)
 
-    return <ProductOverview product={product} ingredients={ingredients} messages={messages} locale={locale}/>;
+    return <ProductOverview product={product} ingredients={ingredients} messages={messages}/>;
   } catch (error) {
       console.log("Error", error);
   }
@@ -31,12 +31,21 @@ export default function page({params}:any) {
     ingredients : t("ingredients"),
     Addingredients : t("Addingredients"),
     Selectedingredients : t("Selectedingredients"),
-    byName : t("byName"),
-    SelectOne : t("SelectOne")
+    filters : {
+      sorterName : t("filters.sorterName"),
+      select : t("filters.select"),
+      meats: t("filters.meats"),
+      cheeses: t("filters.cheeses"),
+      sauces: t("filters.sauces"),
+      fish: t("filters.fish"),
+      fruitsVegetables: t("filters.fruitsVegetables"),
+      pasta: t("filters.pasta"),
+    },
+    locale : locale 
   }
 
   return (
-    <main className="h-screen w-full">
+    <main className="h-full w-full">
       {getPropsForOverview(params.id, messages, locale)}
     </main>
   )

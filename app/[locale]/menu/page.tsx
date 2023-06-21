@@ -23,13 +23,19 @@ export default function page() {
     other : t("title.other"),
     filters : {
       sorterName : t("filters.sorterName"),
-      select : t("filters.select")
+      select : t("filters.select"),
+      meats: t("filters.meats"),
+      cheeses: t("filters.cheeses"),
+      sauces: t("filters.sauces"),
+      fish: t("filters.fish"),
+      fruitsVegetables: t("filters.fruitsVegetables"),
+      pasta: t("filters.pasta"),
     },
     locale : locale 
   }
 
   return (
-    <main className="h-screen w-full">
+    <main className="h-full w-full">
       {getPropsForMenuTab(message)}
     </main>
   )

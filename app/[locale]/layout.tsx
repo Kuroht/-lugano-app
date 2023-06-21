@@ -39,7 +39,7 @@ export default function RootLayout({
   return (
     <html lang={locale}>
       <body className={inter.className}>
-        <div className="h-full w-full bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+        <div className="h-screnn w-full bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
           <div className='w-full h-full lg:w-4/5 mx-auto'>
             <ExtraNav />
             <Nav messages={navMessages} locale={locale}/>

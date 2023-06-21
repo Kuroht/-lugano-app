@@ -20,16 +20,31 @@ function productTypeIcon(type: string, isIngredient:boolean) {
   }
 }
 
-export default function ProductLine({ product }: { product: Product }) {
+export default function ProductLine({ product, locale }: { product: any, locale : string }) {
   const isIngredient = product.ingredients ? false : true
-  const ingredientList = !isIngredient ? product.ingredients.map((ingredient) => ingredient.name).join(', ') : "";
-
+  const ingredientList = !isIngredient ? product.ingredients.map((ingredient) => locale !=="en" ? ingredient.name : ingredient.nameEn).join(', ') : "";
+  
   return (
+    isIngredient ? 
+    <div className='border rounded-xl p-2 shadow-md bg-slate-800/40 border-transparent'>
+      <div className="flex justify-start">
+        <p className="text-lg font-bold mr-2">{product.number}</p>
+        <div className="flex flex-grow items-center">
+            <p className="text-lg font-bold mr-2">{ isIngredient && locale === "en" ? product.nameEn : product.name}</p>
+            {product.recommended ? <HiStar className="text-sm text-gray-300"/> : ""}
+            {productTypeIcon(product.type, isIngredient)}
+        </div>
+        <p className="text-lg font-bold">{product.price}<span className='ml-1'>€</span></p>
+      </div>
+      <div className="mt-1">
+        <p className="text-gray-400 text-xs overflow-hidden whitespace-normal">{ingredientList}</p>
+      </div>
+    </div> :
     <Link href={`/menu/${product.id}`} className='border rounded-xl p-2 shadow-md bg-slate-800/40 border-transparent'>
       <div className="flex justify-start">
         <p className="text-lg font-bold mr-2">{product.number}</p>
         <div className="flex flex-grow items-center">
-            <p className="text-lg font-bold mr-2">{product.name}</p>
+            <p className="text-lg font-bold mr-2">{ isIngredient && locale === "en" ? product.nameEn : product.name}</p>
             {product.recommended ? <HiStar className="text-sm text-gray-300"/> : ""}
             {productTypeIcon(product.type, isIngredient)}
         </div>

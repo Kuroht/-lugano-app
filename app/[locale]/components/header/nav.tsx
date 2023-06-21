@@ -11,7 +11,6 @@ export default function Nav({ messages,locale }){
     const pathname = usePathname();
 
     const dynamicPathname = locale === "en" ? pathname.substring(3) : pathname;
-    console.log(dynamicPathname)
 
     function handleMenu() {
         const menuToggle = !showMenu;
@@ -26,7 +25,7 @@ export default function Nav({ messages,locale }){
                     <Link href="/" className="text-white text-3xl font-semibold">Lugano</Link>
                 </div>
                 <div className="hidden md:block">
-                    <ul className="flex space-x-4">
+                    <ul className="flex space-x-4" onClick={() => handleMenu()}>
                         <li><Link href="/" className="text-gray-300 hover:text-white text-xl">{messages.Home}</Link></li>
                         <li><Link href="/menu" className="text-gray-300 hover:text-white text-xl">{messages.Menu}</Link></li>
                         <li><Link href="/about" className="text-gray-300 hover:text-white text-xl">{messages.About}</Link></li>
@@ -51,7 +50,7 @@ export default function Nav({ messages,locale }){
                             <HiXMark className="text-3xl" />
                             </button>
                         </div>
-                        <ul className="flex flex-col space-y-4">
+                        <ul className="flex flex-col space-y-4" onClick={() => handleMenu()}>
                             <li><Link href="/" className="text-gray-300 hover:text-white text-xl">{messages.Home}</Link></li>
                             <li><Link href="/menu" className="text-gray-300 hover:text-white text-xl">{messages.Menu}</Link></li>
                             <li><Link href="/about" className="text-gray-300 hover:text-white text-xl">{messages.About}</Link></li>

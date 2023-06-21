@@ -19,14 +19,6 @@ const typeArr = ["meats", "cheeses", "sauces", "fish", "fruitsVegetables", "past
 interface DisplayNames {
   [key: string]: string;
 }
-const displayNames: DisplayNames = {
-  meats: "Carnes",
-  cheeses: "Queijos",
-  sauces: "Molhos",
-  fish: "Peixes",
-  fruitsVegetables: "Fruta/Legumes",
-  pasta: "Massa",
-};
 
 export default function Filters({ filteredContent, message }) {
   const [contentsArr, setContentsArr] = useState(filteredContent);
@@ -40,9 +32,17 @@ export default function Filters({ filteredContent, message }) {
     byIngredient: '',
     byIngrType: '',
   });
-
+  const displayNames: DisplayNames = {
+    meats: message.filters.meats, 
+    cheeses: message.filters.cheeses, 
+    sauces: message.filters.sauces, 
+    fish: message.filters.fish, 
+    fruitsVegetables: message.filters.fruitsVegetables, 
+    pasta: message.filters.pasta, 
+  };
+  
   const isIngredient = filteredContent.find((product : Product) => product.ingredients ? false : true)
-  console.log(message);
+
   useEffect(() => {
     handleFilterContentArr();
   }, [filters, filteredContent]);
@@ -184,14 +184,14 @@ export default function Filters({ filteredContent, message }) {
         (
           /* Product card Mode */
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {contentsArr?.map((item: Product) => <ProductCard key={item.number} product={item} /> )}
+          {contentsArr?.map((item: Product) => <ProductCard key={item.number} product={item} locale={message.locale} /> )}
         </div>
         ) : (
           /* Product line Mode */
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {contentsArr?.map((item: Product) => (
               <div key={item.number} className="flex flex-col">
-                <ProductLine product={item} />
+                <ProductLine product={item} locale={message.locale}/>
               </div>
             ))}
           </div>

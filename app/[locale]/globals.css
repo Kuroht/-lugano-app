@@ -53,6 +53,18 @@
   }
 }
 
+@keyframes loading {
+  0% { content: 'Loading'; }
+  33% { content: 'Loading.'; }
+  66% { content: 'Loading..'; }
+  100% { content: 'Loading...'; }
+}
+
+.animate-loading::after {
+  content: 'Loading...';
+  animation: loading 1.5s infinite;
+}
+
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(

@@ -6,11 +6,15 @@ import hero from "../../../../../public/pizza.png"
 
 type Ingredient = {
     name: string,
+    nameEn: string,
     price: number,
     qty: number,
 }
 
 const typeArr = ["meats", "cheeses", "sauces", "fish", "fruitsVegetables", "pasta"];
+interface DisplayNames {
+  [key: string]: string;
+}
 
 type Filters = {
   byName: string;
@@ -27,8 +31,17 @@ export default function ProductOverview({ product, ingredients, messages }){
     byIngrType: '',
   });
   
-  const handleAddIngredient = (name: string, price: number) => {
-    const ingredientIndex = selectedIngredients.findIndex((ingredient) => ingredient.name === name);
+  const displayNames: DisplayNames = {
+    meats: messages.filters.meats, 
+    cheeses: messages.filters.cheeses, 
+    sauces: messages.filters.sauces, 
+    fish: messages.filters.fish, 
+    fruitsVegetables: messages.filters.fruitsVegetables, 
+    pasta: messages.filters.pasta, 
+  };
+  
+  const handleAddIngredient = (name: string, nameEn: string, price: number) => {
+    const ingredientIndex = selectedIngredients.findIndex((ingredient) => ingredient.name === name || ingredient.nameEn === nameEn);
 
     if (ingredientIndex !== -1) {
       // If ingredient is found, update the quantity
@@ -43,6 +56,7 @@ export default function ProductOverview({ product, ingredients, messages }){
       setSelectedIngredients([
         ...selectedIngredients, {
           name,
+          nameEn,
           price,
           qty: 1,
         },
@@ -79,7 +93,8 @@ export default function ProductOverview({ product, ingredients, messages }){
       // Filter by name
       if (
         filters.byName !== '' &&
-        !ingredient.name.toLowerCase().includes(filters.byName.toLowerCase())
+        !ingredient.name.toLowerCase().includes(filters.byName.toLowerCase()) &&
+        !ingredient.nameEn.toLowerCase().includes(filters.byName.toLowerCase())
       ) {
         return false;
       }
@@ -117,7 +132,7 @@ export default function ProductOverview({ product, ingredients, messages }){
           <ul className='grid grid-cols-2'>
             {
               product.ingredients.map((ingredient, index) => (
-                <li key={index} className='text-sm text-gray-500'>{ingredient.name}</li>
+                <li key={index} className='text-sm text-gray-500'>{messages.locale !== "en" ? ingredient.name : ingredient.nameEn}</li>
               ))
             /*  
               product.ingredients.map((ingredient, index) => (
@@ -133,7 +148,7 @@ export default function ProductOverview({ product, ingredients, messages }){
                 type="text"
                 minLength={2}
                 maxLength={20}
-                placeholder={messages.byName}
+                placeholder={messages.filters.sorterName}
                 className="text-white bg-transparent block w-20 shadow-none sm:text-sm border-b-2 border-gray-300 focus:outline-none focus:border-gray-500"
                 value={filters.byName}
                 onChange={(e) =>
@@ -156,25 +171,25 @@ export default function ProductOverview({ product, ingredients, messages }){
                 }
               >
                 <option value="0" className="text-white bg-slate-800 sm:text-sm">
-                  {messages.SelectOne}
+                  {messages.filters.select}
                 </option>
                 {typeArr.map((ingredient) => (
                   <option key={ingredient} value={ingredient} className="text-white bg-slate-800 sm:text-sm">
-                    {ingredient}
+                    {displayNames[ingredient]}
                   </option>
                 ))}
               </select>
             </div>
           </div>
-          <div className="flex gap-2 overflow-x-auto scroll-smooth">
+          <div className="flex gap-2 overflow-x-auto scroll-smooth h-20">
             {/* list of available ingredients */
 
                 buttonIngredients.map((ingredient, index) => (
                   <button
                       key={index} className="bg-tranparent text-white px-2 py-1 rounded-md h-16 md:h-20"
-                      onClick={() => {handleAddIngredient(ingredient.name, ingredient.price)}}
+                      onClick={() => {handleAddIngredient(ingredient.name, ingredient.nameEn, ingredient.price)}}
                   >
-                      {ingredient.name}
+                      {messages.locale !== "en" ? ingredient.name : ingredient.nameEn}
                   </button>
                 ))
               /*
@@ -197,7 +212,7 @@ export default function ProductOverview({ product, ingredients, messages }){
             {selectedIngredients.map((ingredient,index) => (
               <li key={index} className='text-md text-white'>
                 <span className={`text-md text-white ${ ingredient.qty === 1 ? "hidden" : "" }`}> {ingredient.qty} x </span>
-                {ingredient.name}
+                {messages.locale !== "en" ? ingredient.name : ingredient.nameEn}
                 <button
                   type='button'
                   className="bg-tranparent text-red-500 rounded-md ml-2"

@@ -23,14 +23,28 @@
         },
         "filters" : {
             "sorterName" : "By Name",
-            "select" : "Select One"
+            "select" : "Select One",
+            "meats": "Meat",
+            "cheeses": "Cheese",
+            "sauces": "Sauce",
+            "fish": "Fish",
+            "fruitsVegetables": "FruitsOrVegetables",
+            "pasta": "Pasta"
         }
     },
     "ProductOverview" : {
         "ingredients" : "Ingredients",
         "Addingredients" : "Add Ingredients",
         "Selectedingredients" : "Selected Ingredients",
-        "byName" : "By Name",
-        "SelectOne" : "Select One"
+        "filters" : {
+            "sorterName" : "By Name",
+            "select" : "Select One",
+            "meats": "Meat",
+            "cheeses": "Cheese",
+            "sauces": "Sauce",
+            "fish": "Fish",
+            "fruitsVegetables": "FruitsOrVegetables",
+            "pasta": "Pasta"
+        }
     }
 }

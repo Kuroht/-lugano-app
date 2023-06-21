@@ -29,7 +29,7 @@ export default function Home() {
   ]
 
   return (
-    <main>
+    <main className='h-full'>
       <div className="bg-gray-900 text-white">
         <div className="container mx-auto py-16 px-4">
           <div className="md:flex md:items-center md:justify-between">
